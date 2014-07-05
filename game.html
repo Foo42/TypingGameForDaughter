@@ -318,6 +318,8 @@
 		var letterFingers = {
 			'f':{hand:'left', finger:1},
 			'j':{hand:'right', finger:1},
+			'd':{hand:'left', finger:2},
+			'k':{hand:'right', finger:2}
 		}
 
 		function activateIndicatorForLetter(letter){
@@ -330,10 +332,10 @@
 		}
 
 
-		var keys = {70:'f', 74:'j'};
+		var keys = {70:'f', 74:'j', 68:'d', 75:'k'};
 
 		function changeLetter(){
-			var newLetter = Math.round(Math.random()) ? 'F' : 'J';
+			var newLetter = keys[Object.keys(keys)[Math.floor((Math.random()*4))]];
 			document.querySelector('#question').innerText = newLetter;
 			activateIndicatorForLetter(newLetter);
 		}
