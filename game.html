@@ -15,6 +15,7 @@
 	</head>
 	<body>
 		<div id="question" style="font-size:8em; text-align:center;"></div>
+    <div id="score" style="font-size:4em">0</div>
 		<div id="answer"></div>
 		<div id="hands">
 			<div class="hand-container" id="left-hand">
@@ -333,21 +334,41 @@
 
 
 		var keys = {70:'f', 74:'j', 68:'d', 75:'k'};
+    var numberOfKeys = Object.keys(keys).length;
+    var tooSlowTimer;
+    var timeLetterShown;
 
 		function changeLetter(){
-			var newLetter = keys[Object.keys(keys)[Math.floor((Math.random()*4))]];
+			var newLetter = keys[Object.keys(keys)[Math.floor((Math.random()*numberOfKeys))]];
 			document.querySelector('#question').innerText = newLetter;
 			activateIndicatorForLetter(newLetter);
+      timeLetterShown = new Date().getTime();
+      clearTimeout(tooSlowTimer);
+      clearTimeout(extraFastTimeout);
+      tooSlowTimer = setTimeout(loosePoint.bind(null,"Too Slow! :("),5000);
 		}
+
+    function loosePoint(reason){
+      document.querySelector('#question').innerText = reason;
+      var scoreElement = document.querySelector('#score');
+      scoreElement.innerText = parseInt(scoreElement.innerText) - 1;
+      setTimeout(changeLetter, 2000);
+    }
 
 		function evaluateGuess(keycode){
 			
 			var c = keys[keycode];
 
 			if(c === document.querySelector('#question').innerText.toLowerCase()){
-				document.querySelector('#question').innerText = "Well done!";
+        var timeTakenToGuess = (new Date().getTime() - timeLetterShown)/1000;
+        var bonus = timeTakenToGuess < 1;
+				document.querySelector('#question').innerText = bonus ? "SUPER FAST!!" : "Well done!";
+        var scoreElement = document.querySelector('#score');
+        scoreElement.innerText = parseInt(scoreElement.innerText) + (bonus ? 2 : 1);
 				setTimeout(changeLetter, 2000);
-			}
+			} else {
+        loosePoint('wrong letter! :(');
+      }
 		}
 
 		function init(){
