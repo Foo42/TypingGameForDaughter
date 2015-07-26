@@ -332,21 +332,30 @@
 			document.querySelector(selector).classList.add('active');
 		}
 
+    var wrongSound = new Audio("wrong.wav"); // buffers automatically when created
+    var cheerSound = new Audio("cheer.wav"); // buffers automatically when created
+    var tooSlowSound = new Audio("tooslow.wav"); // buffers automatically when created
 
 		var keys = {70:'f', 74:'j', 68:'d', 75:'k'};
     var numberOfKeys = Object.keys(keys).length;
     var tooSlowTimer;
     var timeLetterShown;
 
-		function changeLetter(){
+		function tooSlow(){
+      tooSlowSound.play();
+      loosePoint("Too Slow! :("); 
+    }
+
+    function changeLetter(){
 			var newLetter = keys[Object.keys(keys)[Math.floor((Math.random()*numberOfKeys))]];
 			document.querySelector('#question').innerText = newLetter;
 			activateIndicatorForLetter(newLetter);
       timeLetterShown = new Date().getTime();
       clearTimeout(tooSlowTimer);
-      clearTimeout(extraFastTimeout);
-      tooSlowTimer = setTimeout(loosePoint.bind(null,"Too Slow! :("),5000);
+      tooSlowTimer = setTimeout(tooSlow,5000);
 		}
+
+    
 
     function loosePoint(reason){
       document.querySelector('#question').innerText = reason;
@@ -362,11 +371,13 @@
 			if(c === document.querySelector('#question').innerText.toLowerCase()){
         var timeTakenToGuess = (new Date().getTime() - timeLetterShown)/1000;
         var bonus = timeTakenToGuess < 1;
-				document.querySelector('#question').innerText = bonus ? "SUPER FAST!!" : "Well done!";
+				document.querySelector('#question').innerText = bonus ? "SUPER FAST!!" : "Well done! &#x1f603;";
         var scoreElement = document.querySelector('#score');
         scoreElement.innerText = parseInt(scoreElement.innerText) + (bonus ? 2 : 1);
+        cheerSound.play();
 				setTimeout(changeLetter, 2000);
 			} else {
+        wrongSound.play();
         loosePoint('wrong letter! :(');
       }
 		}
