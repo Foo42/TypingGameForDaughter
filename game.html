@@ -335,6 +335,7 @@
     var wrongSound = new Audio("wrong.wav"); // buffers automatically when created
     var cheerSound = new Audio("cheer.wav"); // buffers automatically when created
     var tooSlowSound = new Audio("tooslow.wav"); // buffers automatically when created
+    var fastSound = new Audio("fast.mp3"); // buffers automatically when created
 
 		var keys = {70:'f', 74:'j', 68:'d', 75:'k'};
     var numberOfKeys = Object.keys(keys).length;
@@ -388,7 +389,7 @@
         var bonus = timeTakenToGuess < 1;
         var scoreElement = document.querySelector('#score');
         scoreElement.innerText = parseInt(scoreElement.innerText) + (bonus ? 2 : 1);
-        cheerSound.play();
+        bonus ? fastSound.play() : cheerSound.play();
 
         var message = bonus ? "SUPER FAST!!" : "Well done!";
         displayMessage(message).then(function(){
