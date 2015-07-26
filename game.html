@@ -340,6 +340,7 @@
     var numberOfKeys = Object.keys(keys).length;
     var tooSlowTimer;
     var timeLetterShown;
+    var showingMessage;
 
 		function tooSlow(){
       tooSlowSound.play();
@@ -355,27 +356,44 @@
       tooSlowTimer = setTimeout(tooSlow,5000);
 		}
 
-    
+    function displayMessage(message){
+      showingMessage = true;
+      document.querySelector('#question').innerText = message;
+      return new Promise(function(resolve){
+        setTimeout(function(){
+          showingMessage = false;
+          resolve();
+        },1500);  
+      });
+      
+    }
 
     function loosePoint(reason){
-      document.querySelector('#question').innerText = reason;
       var scoreElement = document.querySelector('#score');
       scoreElement.innerText = parseInt(scoreElement.innerText) - 1;
-      setTimeout(changeLetter, 2000);
+      displayMessage(reason).then(function(){
+        changeLetter();  
+      });
     }
 
 		function evaluateGuess(keycode){
-			
+			if(showingMessage){
+        return;
+      }
+
 			var c = keys[keycode];
 
 			if(c === document.querySelector('#question').innerText.toLowerCase()){
         var timeTakenToGuess = (new Date().getTime() - timeLetterShown)/1000;
         var bonus = timeTakenToGuess < 1;
-				document.querySelector('#question').innerText = bonus ? "SUPER FAST!!" : "Well done! &#x1f603;";
         var scoreElement = document.querySelector('#score');
         scoreElement.innerText = parseInt(scoreElement.innerText) + (bonus ? 2 : 1);
         cheerSound.play();
-				setTimeout(changeLetter, 2000);
+
+        var message = bonus ? "SUPER FAST!!" : "Well done! &#x1f603;";
+        displayMessage(message).then(function(){
+          changeLetter();
+        });
 			} else {
         wrongSound.play();
         loosePoint('wrong letter! :(');
