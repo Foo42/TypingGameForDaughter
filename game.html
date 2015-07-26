@@ -353,7 +353,7 @@
 			activateIndicatorForLetter(newLetter);
       timeLetterShown = new Date().getTime();
       clearTimeout(tooSlowTimer);
-      tooSlowTimer = setTimeout(tooSlow,5000);
+      tooSlowTimer = setTimeout(tooSlow,8000);
 		}
 
     function displayMessage(message){
@@ -390,7 +390,7 @@
         scoreElement.innerText = parseInt(scoreElement.innerText) + (bonus ? 2 : 1);
         cheerSound.play();
 
-        var message = bonus ? "SUPER FAST!!" : "Well done! &#x1f603;";
+        var message = bonus ? "SUPER FAST!!" : "Well done!";
         displayMessage(message).then(function(){
           changeLetter();
         });
