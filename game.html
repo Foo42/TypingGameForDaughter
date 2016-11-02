@@ -337,8 +337,9 @@
     var tooSlowSound = new Audio("tooslow.wav"); // buffers automatically when created
     var fastSound = new Audio("fast.mp3"); // buffers automatically when created
 
-		var keys = {70:'f', 74:'j', 68:'d', 75:'k'};
-    var numberOfKeys = Object.keys(keys).length;
+    var level = parseInt(window.location.hash.substr(1));
+    var keys = {70:'f', 74:'j', 68:'d', 75:'k'};
+    var numberOfKeys = Math.min(Object.keys(keys).length, level);
     var tooSlowTimer;
     var timeLetterShown;
     var showingMessage;
